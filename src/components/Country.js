@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Country = ({name, id, removeCountry})=> {
+const Country = ({name, id, handleCheckChange})=> {
     return (
-        <li key={id}>{name} <button onClick={()=>{removeCountry(id)}}> Remove </button></li>
+        <li key={id}>{name} <input type="checkbox" onChange={handleCheckChange}></input></li>
     );
 }
 

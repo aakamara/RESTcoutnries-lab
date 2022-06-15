@@ -1,50 +1,64 @@
 import './App.css';
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect, useState} from 'react';
 import usePersistedState from './components/usePersistedState';
 import CountryList from './components/CountryList';
+import VisitedCountryList from "./components/VisitedCountryList"
 
 
 function App() {
-  const [countries, setcount] = usePersistedState('countries', []);
 
-  
-  const [countryId, setCountryId] = usePersistedState('countryId', 0);
+  const [countries, setCountries] = useState([]);
+  const [countryId, setCountryId] = useState(0);
+  const [visitedCountries, setVisitedCountries] = usePersistedState("visitedCountries", [])
   const inputValueRef = useRef();
   
-  const handleAddCountry = () => {
-    const name = inputValueRef.current.value;
-    if (name === '') return;
-    setCountries(prevCountries => [...prevCountries, { name: name, id: countryId }]);
-    setCountryId(id => id += 1);
-    inputValueRef.current.value = '';
-  }
 
-  const handleClearAll = (e) => {
-    setCountries((prev) => []);
-  }
-
-  const removeCountry = (id) => {
-    setCountries(prev => prev.filter(country => country.id !== id));
+  const fetchData = () => {
+    fetch("https://restcountries.com/v2/all")
+      .then(response => response.json())
+      .then(data => setCountries(data))
   }
 
   useEffect(() => {
-    document.title = `${countries.length} countries left`;
-  }, [countries]);
+    fetchData()
+  },[])
 
-  useEffect(() => {
-    console.log(`countryId: `, countryId);
-    console.log(`countries: `, countries);
-  }, [countries, countryId]);
+  // const handleAddCountry = () => {
+  //   const name = inputValueRef.current.value;
+  //   if (name === '') return;
+  //   setCountries(prevCountries => [...prevCountries, { name: name, id: countryId }]);
+  //   setCountryId(id => id += 1);
+  //   inputValueRef.current.value = '';
+  // }
+
+  // const handleClearAll = (e) => {
+  //   setCountries((prev) => []);
+  // }
+
+  // const removeCountry = (id) => {
+  //   setCountries(prev => prev.filter(country => country.id !== id));
+  // }
+
+  const handleChecked = (country) => {
+    setVisitedCountries(prev => [...prev, country])
+  }
+
+  const handleUnchecked = (id) => {
+    setVisitedCountries(prev => prev.filter(country => country.id !== id));
+  }
+
+  const handleChangeCheck = () => {
+    // if checkbox is checked run handleChecked
+    // else handleUnchecked
+    // handleChecked()
+  }
 
   return (
     <div className="App">
-      <h1>Darth Vader's Country List ▼皿▼</h1>
-      <p>I really must remember to...</p>
-      <hr />
-      <CountryList countries={countries} removeCountry={removeCountry} />
-      <hr />
-      <input ref={inputValueRef} type="text" ></input><button
-        onClick={handleAddCountry}>Add Country</button><button onClick={handleClearAll}>Clear All</button>
+      <h1>Bucket List</h1>
+      <CountryList countries={countries} handleCheckChange={handleChangeCheck}/>
+      <VisitedCountryList visitedCountries={visitedCountries} handleCheckChange={handleChangeCheck}/>
+
     </div>
   );
 }

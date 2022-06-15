@@ -1,11 +1,13 @@
 import Country from "./Country";
 
-const CountryList = ({countries, removeCountry})=> {
+const CountryList = ({countries, handleCheckChange})=> {
     return (
-        <ul>
-            {countries.map(country => <Country key = {country.id} name={country.name} id={country.id} 
-            removeCountry={removeCountry} />)}
-        </ul>
+        <>
+            <h3>All Countries</h3>
+            <ul>
+                {countries.map(country => <Country key = {country.id} name={country.name} id={country.id} handleCheckChange={handleCheckChange}/>)}
+            </ul>
+        </>
     );
 }
 
