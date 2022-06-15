@@ -27,6 +27,15 @@ function App() {
     setCountries(prev => prev.filter(country => country.id !== id));
   }
 
+  useEffect(() => {
+    document.title = `${countries.length} countries left`;
+  }, [countries]);
+
+  useEffect(() => {
+    console.log(`countryId: `, countryId);
+    console.log(`countries: `, countries);
+  }, [countries, countryId]);
+
   return (
     <div className="App">
       <h1>Darth Vader's Country List ▼皿▼</h1>
